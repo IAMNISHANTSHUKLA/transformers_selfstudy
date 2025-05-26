@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Transformers Database</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 120px;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .filter-select {
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 16px;
+            background: white;
+            cursor: pointer;
+        }
+        
+        .export-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.3s ease;
+        }
+        
+        .export-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        th:hover {
+            background: linear-gradient(135deg, #5a6fd8, #6a42a8);
+        }
+        
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f8f9ff;
+        }
+        
+        tr:hover {
+            background-color: #e8f0ff;
+            transition: background-color 0.3s ease;
+        }
+        
+        .category-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            margin: 2px;
+        }
+        
+        .foundational { background: #3498db; }
+        .efficiency { background: #2ecc71; }
+        .vision { background: #e74c3c; }
+        .multimodal { background: #f39c12; }
+        .audio { background: #9b59b6; }
+        .tabular { background: #1abc9c; }
+        .graph { background: #e67e22; }
+        .scientific { background: #34495e; }
+        .specialized { background: #95a5a6; }
+        .recent { background: #e91e63; }
+        
+        .year-badge {
+            background: #ecf0f1;
+            color: #2c3e50;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        
+        .complexity-indicator {
+            width: 100px;
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .complexity-bar {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .low { background: #2ecc71; }
+        .medium { background: #f39c12; }
+        .high { background: #e74c3c; }
+        
+        .description {
+            max-width: 300px;
+            line-height: 1.4;
+            font-size: 14px;
+        }
+        
+        .highlight {
+            background: yellow !important;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .search-box {
+                min-width: 100%;
+            }
+            
+            th, td {
+                padding: 8px;
+                font-size: 14px;
+            }
+        }
+        .paper-link {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white !important;
+    padding: 6px 12px;
+    border-radius: 15px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    margin: 2px 0;
+    transition: all 0.3s ease;
+}
+
+.paper-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+    text-decoration: none;
+    color: white !important;
+}
+
+.use-case {
+    background: #f8f9ff;
+    border-left: 4px solid #667eea;
+    padding: 8px 12px;
+    margin: 4px 0;
+    border-radius: 4px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.use-case-title {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 4px;
+}
+        .use-case-description {
+            color: #34495e;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 Comprehensive Transformers Database</h1>
+            <p>Complete catalog of transformer architectures from 2017 to 2024</p>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalCount">0</div>
+                <div>Total Models</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="categoryCount">0</div>
+                <div>Categories</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="recentCount">0</div>
+                <div>2024 Models</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search transformers..." />
+            <select class="filter-select" id="categoryFilter">
+                <option value="">All Categories</option>
+            </select>
+            <select class="filter-select" id="yearFilter">
+                <option value="">All Years</option>
+            </select>
+            <button class="export-btn" onclick="exportToCSV()">📊 Export CSV</button>
+        </div>
+        
+        <div class="table-container">
+            <table id="transformerTable">
+                <thead>
+    <tr>
+        <th onclick="sortTable(0)">Name 📝</th>
+        <th onclick="sortTable(1)">Year 📅</th>
+        <th onclick="sortTable(2)">Category 🏷️</th>
+        <th onclick="sortTable(3)">Complexity 📊</th>
+        <th onclick="sortTable(4)">Key Innovation 💡</th>
+        <th onclick="sortTable(5)">Description 📋</th>
+        <th onclick="sortTable(6)">Use Case 🎯</th>
+        <th onclick="sortTable(7)">Domain 🌐</th>
+        <th onclick="sortTable(8)">Paper Link 📄</th>
+    </tr>
+</thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const transformerData = [
+            // Foundational
+            { name: "Vanilla Transformer", year: 2017, category: "foundational", complexity: "medium", innovation: "Self-attention mechanism", description: "Original transformer architecture with encoder-decoder, multi-head attention, and positional encoding", domain: "NLP", source: "Attention Is All You Need" },
+            { name: "BERT", year: 2018, category: "foundational", complexity: "medium", innovation: "Bidirectional pre-training", description: "Bidirectional encoder-only transformer using masked language modeling", domain: "NLP", source: "BERT: Pre-training of Deep Bidirectional Transformers" },
+            { name: "GPT", year: 2018, category: "foundational", complexity: "medium", innovation: "Autoregressive generation", description: "Decoder-only transformer for text generation", domain: "NLP", source: "Improving Language Understanding by Generative Pre-Training" },
+            { name: "GPT-2", year: 2019, category: "foundational", complexity: "high", innovation: "Scaling language models", description: "Larger GPT with 1.5B parameters, demonstrated emergent capabilities", domain: "NLP", source: "Language Models are Unsupervised Multitask Learners" },
+            { name: "GPT-3", year: 2020, category: "foundational", complexity: "high", innovation: "Few-shot learning", description: "175B parameter model with strong few-shot capabilities", domain: "NLP", source: "Language Models are Few-Shot Learners" },
+            { name: "GPT-4", year: 2023, category: "foundational", complexity: "high", innovation: "Multimodal capabilities", description: "Advanced language model with vision capabilities", domain: "Multimodal", source: "GPT-4 Technical Report" },
+            
+            // Efficiency-Focused
+            { name: "Linformer", year: 2020, category: "efficiency", complexity: "medium", innovation: "Linear attention complexity", description: "Projects keys and values to lower dimensions for O(n) complexity", domain: "NLP", source: "Linformer: Self-Attention with Linear Complexity" },
+            { name: "Performer", year: 2020, category: "efficiency", complexity: "medium", innovation: "FAVOR+ algorithm", description: "Uses random feature maps to approximate attention in linear time", domain: "NLP", source: "Rethinking Attention with Performers" },
+            { name: "Reformer", year: 2020, category: "efficiency", complexity: "medium", innovation: "LSH + reversible layers", description: "Dramatically reduces memory usage with locality-sensitive hashing", domain: "NLP", source: "Reformer: The Efficient Transformer" },
+            { name: "Flash Attention", year: 2022, category: "efficiency", complexity: "low", innovation: "IO-aware attention", description: "Memory-efficient attention computation for longer sequences", domain: "General", source: "FlashAttention: Fast and Memory-Efficient Exact Attention" },
+            { name: "Flash Attention 2", year: 2023, category: "efficiency", complexity: "low", innovation: "Further optimizations", description: "Improved version with better parallelization and reduced memory usage", domain: "General", source: "FlashAttention-2: Faster Attention with Better Parallelism" },
+            { name: "PagedAttention", year: 2023, category: "efficiency", complexity: "low", innovation: "Memory paging", description: "Efficient memory management for attention in serving scenarios", domain: "Serving", source: "Efficient Memory Management for Large Language Model Serving" },
+            
+            // Vision Transformers
+            { name: "Vision Transformer (ViT)", year: 2020, category: "vision", complexity: "medium", innovation: "Patch-based vision", description: "Applies transformer directly to image patches for vision tasks", domain: "Computer Vision", source: "An Image is Worth 16x16 Words" },
+            { name: "DeiT", year: 2021, category: "vision", complexity: "medium", innovation: "Knowledge distillation", description: "Data-efficient image transformers with teacher-student training", domain: "Computer Vision", source: "Training data-efficient image transformers" },
+            { name: "Swin Transformer", year: 2021, category: "vision", complexity: "medium", innovation: "Shifted windows", description: "Hierarchical vision transformer with shifted window attention", domain: "Computer Vision", source: "Swin Transformer: Hierarchical Vision Transformer" },
+            { name: "Pyramid Vision Transformer", year: 2021, category: "vision", complexity: "medium", innovation: "Multi-scale features", description: "Pyramid structure for dense prediction tasks", domain: "Computer Vision", source: "Pyramid Vision Transformer" },
+            { name: "CoAtNet", year: 2021, category: "vision", complexity: "medium", innovation: "Conv + Attention", description: "Combines convolution and attention for improved vision performance", domain: "Computer Vision", source: "CoAtNet: Marrying Convolution and Attention" },
+            { name: "MaxViT", year: 2022, category: "vision", complexity: "medium", innovation: "Multi-axis attention", description: "Combines local and global attention for vision tasks", domain: "Computer Vision", source: "MaxViT: Multi-Axis Vision Transformer" },
+            
+            // Tabular Data
+            { name: "TabTransformer", year: 2020, category: "tabular", complexity: "medium", innovation: "Tabular data handling", description: "Transformer architecture specifically designed for tabular data", domain: "Tabular ML", source: "TabTransformer: Tabular Data Modeling Using Contextual Embeddings" },
+            { name: "Tabformer", year: 2021, category: "tabular", complexity: "medium", innovation: "Sequential tabular modeling", description: "Treats tabular data as sequences for better representation learning", domain: "Tabular ML", source: "Tabformer: Tabular Transformer for Modeling Tabular Data" },
+            { name: "FT-Transformer", year: 2021, category: "tabular", complexity: "medium", innovation: "Feature tokenization", description: "Feature Tokenizer + Transformer for tabular data", domain: "Tabular ML", source: "Revisiting Deep Learning Models for Tabular Data" },
+            { name: "SAINT", year: 2021, category: "tabular", complexity: "medium", innovation: "Self-attention for tabular", description: "Self-Attention and Intersample Attention Transformer for tabular data", domain: "Tabular ML", source: "SAINT: Improved Neural Networks for Tabular Data" },
+            { name: "TabNet", year: 2019, category: "tabular", complexity: "medium", innovation: "Sequential attention", description: "Uses sequential attention mechanism for feature selection", domain: "Tabular ML", source: "TabNet: Attentive Interpretable Tabular Learning" },
+            
+            // Multimodal
+            { name: "CLIP", year: 2021, category: "multimodal", complexity: "medium", innovation: "Contrastive learning", description: "Contrastive language-image pre-training", domain: "Vision-Language", source: "Learning Transferable Visual Models From Natural Language Supervision" },
+            { name: "DALL-E", year: 2021, category: "multimodal", complexity: "high", innovation: "Text-to-image generation", description: "Generates images from text descriptions", domain: "Vision-Language", source: "Zero-Shot Text-to-Image Generation" },
+            { name: "DALL-E 2", year: 2022, category: "multimodal", complexity: "high", innovation: "Improved image generation", description: "Enhanced text-to-image generation with better quality", domain: "Vision-Language", source: "Hierarchical Text-Conditional Image Generation with CLIP Latents" },
+            { name: "Flamingo", year: 2022, category: "multimodal", complexity: "high", innovation: "Few-shot multimodal", description: "Few-shot learning across vision and language tasks", domain: "Vision-Language", source: "Flamingo: a Visual Language Model for Few-Shot Learning" },
+            { name: "BLIP", year: 2022, category: "multimodal", complexity: "medium", innovation: "Bootstrapped VL pre-training", description: "Bootstrapped vision-language pre-training", domain: "Vision-Language", source: "BLIP: Bootstrapping Language-Image Pre-training" },
+            { name: "BLIP-2", year: 2023, category: "multimodal", complexity: "medium", innovation: "Q-Former architecture", description: "Improved bootstrapped vision-language pre-training", domain: "Vision-Language", source: "BLIP-2: Bootstrapping Language-Image Pre-training with Frozen Image Encoders" },
+            
+            // Audio/Speech
+            { name: "Speech Transformer", year: 2018, category: "audio", complexity: "medium", innovation: "Speech recognition", description: "Transformer adapted for automatic speech recognition", domain: "Speech", source: "Speech-Transformer: A No-Recurrence Sequence-to-Sequence Model" },
+            { name: "Transformer-XL", year: 2019, category: "audio", complexity: "medium", innovation: "Relative positional encoding", description: "Handles longer sequences with relative position encoding", domain: "NLP/Audio", source: "Transformer-XL: Attentive Language Models Beyond a Fixed-Length Context" },
+            { name: "Conformer", year: 2020, category: "audio", complexity: "medium", innovation: "CNN + Transformer", description: "Combines CNN and transformer for speech recognition", domain: "Speech", source: "Conformer: Convolution-augmented Transformer for Speech Recognition" },
+            { name: "Whisper", year: 2022, category: "audio", complexity: "medium", innovation: "Robust speech recognition", description: "Large-scale speech recognition transformer", domain: "Speech", source: "Robust Speech Recognition via Large-Scale Weak Supervision" },
+            { name: "MusicLM", year: 2023, category: "audio", complexity: "high", innovation: "Music generation", description: "Generates music from text descriptions", domain: "Audio Generation", source: "MusicLM: Generating Music From Text" },
+            { name: "AudioPaLM", year: 2023, category: "audio", complexity: "high", innovation: "Speech + text modeling", description: "Large language model for speech and text", domain: "Speech-Language", source: "AudioPaLM: A Large Language Model That Can Speak and Listen" },
+            
+            // Graph Transformers
+            { name: "Graph Transformer", year: 2020, category: "graph", complexity: "medium", innovation: "Graph attention", description: "Applies transformer architecture to graph-structured data", domain: "Graph ML", source: "A Generalization of Transformer Networks to Graphs" },
+            { name: "Graphormer", year: 2021, category: "graph", complexity: "medium", innovation: "Structural encodings", description: "Graph transformer with centrality and spatial encodings", domain: "Graph ML", source: "Do Transformers Really Perform Bad for Graph Representation?" },
+            { name: "GraphiT", year: 2021, category: "graph", complexity: "medium", innovation: "Graph tokenization", description: "Tokenizes graphs for transformer processing", domain: "Graph ML", source: "GraphiT: Encoding Graph Structure in Transformers" },
+            { name: "GPS", year: 2022, category: "graph", complexity: "medium", innovation: "Hybrid architecture", description: "General, Powerful, Scalable graph transformer", domain: "Graph ML", source: "Recipe for a General, Powerful, Scalable Graph Transformer" },
+            
+            // Scientific/Biological
+            { name: "AlphaFold2", year: 2020, category: "scientific", complexity: "high", innovation: "Protein structure prediction", description: "Uses attention for protein structure prediction", domain: "Biology", source: "Highly accurate protein structure prediction with AlphaFold" },
+            { name: "ESM-1b", year: 2021, category: "scientific", complexity: "medium", innovation: "Protein language modeling", description: "Evolutionary Scale Modeling for protein sequences", domain: "Biology", source: "Biological structure and function emerge from scaling unsupervised learning" },
+            { name: "ESM-2", year: 2022, category: "scientific", complexity: "high", innovation: "Scaled protein modeling", description: "Large-scale protein language model", domain: "Biology", source: "Language models of protein sequences at the scale of evolution" },
+            { name: "ChemBERTa", year: 2020, category: "scientific", complexity: "medium", innovation: "Chemical representation", description: "BERT-like model for chemical compounds", domain: "Chemistry", source: "ChemBERTa: Large-Scale Self-Supervised Pretraining for Molecular Property Prediction" },
+            { name: "MolFormer", year: 2022, category: "scientific", complexity: "medium", innovation: "Molecular transformers", description: "Large-scale chemical language representation with transformers", domain: "Chemistry", source: "Large-scale chemical language representations capture molecular structure and properties" },
+            
+            // Recent/Cutting-edge
+            { name: "Mamba", year: 2023, category: "recent", complexity: "medium", innovation: "State-space models", description: "Linear-scaling alternative to transformers using selective state spaces", domain: "General", source: "Mamba: Linear-Time Sequence Modeling with Selective State Spaces" },
+            { name: "Mamba-2", year: 2024, category: "recent", complexity: "medium", innovation: "Improved SSM", description: "Enhanced state-space model with better hardware efficiency", domain: "General", source: "Transformers are SSMs: Generalized Models and Efficient Algorithms Through Structured State Space Duality" },
+            { name: "Jamba", year: 2024, category: "recent", complexity: "high", innovation: "Hybrid Mamba-Transformer", description: "Combines Mamba and Transformer architectures", domain: "General", source: "Jamba: A Hybrid Transformer-Mamba Language Model" },
+            { name: "Griffin", year: 2024, category: "recent", complexity: "medium", innovation: "Local + global recurrence", description: "Hawk and Griffin architectures with mixed attention patterns", domain: "General", source: "Griffin: Mixing Gated Linear Recurrences with Local Attention for Efficient Language Models" },
+            { name: "StripedHyena", year: 2024, category: "recent", complexity: "medium", innovation: "Long-context modeling", description: "Alternative architecture for very long sequences", domain: "General", source: "StripedHyena: Moving Beyond Transformers with Multi-Scale Architecture" },
+            { name: "RetNet", year: 2023, category: "recent", complexity: "medium", innovation: "Retention mechanism", description: "Alternative to transformers using retention instead of attention", domain: "General", source: "Retentive Network: A Successor to Transformer for Large Language Models" },
+            { name: "RWKV", year: 2023, category: "recent", complexity: "medium", innovation: "RNN-Transformer hybrid", description: "Combines RNN and transformer benefits with linear scaling", domain: "General", source: "RWKV: Reinventing RNNs for the Transformer Era" },
+            
+            // Specialized/Other
+            { name: "Switch Transformer", year: 2021, category: "specialized", complexity: "high", innovation: "Mixture of Experts", description: "Sparsely activated MoE transformer", domain: "General", source: "Switch Transformer: Scaling to Trillion Parameter Models" },
+            { name: "GLaM", year: 2021, category: "specialized", complexity: "high", innovation: "Large-scale MoE", description: "Generalist Language Model with sparsely activated parameters", domain: "General", source: "GLaM: Efficient Scaling of Language Models with Mixture-of-Experts" },
+            { name: "PaLM", year: 2022, category: "specialized", complexity: "high", innovation: "Pathways architecture", description: "Pathways Language Model with improved scaling", domain: "General", source: "PaLM: Scaling Language Modeling with Pathways" },
+            { name: "Perceiver", year: 2021, category: "specialized", complexity: "medium", innovation: "Cross-attention", description: "General architecture for arbitrary inputs using cross-attention", domain: "General", source: "Perceiver: General Perception with Iterative Attention" },
+            { name: "Perceiver IO", year: 2021, category: "specialized", complexity: "medium", innovation: "Flexible I/O", description: "General architecture for arbitrary inputs and outputs", domain: "General", source: "Perceiver IO: A General Architecture for Structured Inputs & Outputs" },
+            { name: "FNet", year: 2021, category: "specialized", complexity: "low", innovation: "Fourier transforms", description: "Replaces attention with Fourier transforms", domain: "NLP", source: "FNet: Mixing Tokens with Fourier Transforms" },
+            { name: "Synthesizer", year: 2020, category: "specialized", complexity: "medium", innovation: "Learned attention patterns", description: "Learns attention patterns without input-dependent queries/keys", domain: "NLP", source: "Synthesizer: Rethinking Self-Attention in Transformer Models" },
+            { name: "BigBird", year: 2020, category: "specialized", complexity: "medium", innovation: "Sparse attention", description: "Combines local, global, and random attention patterns", domain: "NLP", source: "Big Bird: Transformers for Longer Sequences" },
+            { name: "Longformer", year: 2020, category: "specialized", complexity: "medium", innovation: "Sliding window attention", description: "Efficient attention for long documents", domain: "NLP", source: "Longformer: The Long-Document Transformer" },
+            { name: "LED", year: 2020, category: "specialized", complexity: "medium", innovation: "Long encoder-decoder", description: "Longformer Encoder-Decoder for long document tasks", domain: "NLP", source: "Longformer: The Long-Document Transformer" },
+            { name: "Linformer", year: 2020, category: "specialized", complexity: "medium", innovation: "Linear complexity", description: "Reduces attention complexity to linear", domain: "General", source: "Linformer: Self-Attention with Linear Complexity" },
+            
+            // Additional Recent Models
+            { name: "Claude", year: 2022, category: "foundational", complexity: "high", innovation: "Constitutional AI", description: "Large language model trained with constitutional AI methods", domain: "General", source: "Constitutional AI: Harmlessness from AI Feedback" },
+            { name: "LLaMA", year: 2023, category: "foundational", complexity: "high", innovation: "Efficient scaling", description: "Large Language Model Meta AI with efficient parameter usage", domain: "General", source: "LLaMA: Open and Efficient Foundation Language Models" },
+            { name: "LLaMA 2", year: 2023, category: "foundational", complexity: "high", innovation: "Chat optimization", description: "Improved LLaMA with better chat capabilities", domain: "General", source: "Llama 2: Open Foundation and Fine-Tuned Chat Models" },
+            { name: "Mistral 7B", year: 2023, category: "recent", complexity: "medium", innovation: "Efficient architecture", description: "High-performance 7B parameter model with grouped-query attention", domain: "General", source: "Mistral 7B" },
+            { name: "Mixtral 8x7B", year: 2024, category: "recent", complexity: "high", innovation: "Sparse MoE", description: "Mixture of experts model with 8 expert networks", domain: "General", source: "Mixtral of Experts" },
+            
+            // Time Series and Other Domains
+            { name: "Informer", year: 2021, category: "specialized", complexity: "medium", innovation: "Time series forecasting", description: "Transformer for long sequence time-series forecasting", domain: "Time Series", source: "Informer: Beyond Efficient Transformer for Long Sequence Time-Series Forecasting" },
+            { name: "Autoformer", year: 2021, category: "specialized", complexity: "medium", innovation: "Decomposition attention", description: "Auto-correlation mechanism for time series", domain: "Time Series", source: "Autoformer: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting" },
+            { name: "FEDformer", year: 2022, category: "specialized", complexity: "medium", innovation: "Frequency domain", description: "Frequency Enhanced Decomposed Transformer for time series", domain: "Time Series", source: "FEDformer: Frequency Enhanced Decomposed Transformer for Long-term Series Forecasting" },
+            { name: "Pyraformer", year: 2021, category: "specialized", complexity: "medium", innovation: "Pyramidal attention", description: "Pyramidal attention for time series forecasting", domain: "Time Series", source: "Pyraformer: Low-Complexity Pyramidal Attention for Long-Range Time Series Modeling" },
+            
+            // Code and Programming
+            { name: "CodeBERT", year: 2020, category: "specialized", complexity: "medium", innovation: "Code understanding", description: "BERT for programming languages", domain: "Code", source: "CodeBERT: A Pre-Trained Model for Programming and Natural Languages" },
+            { name: "CodeT5", year: 2021, category: "specialized", complexity: "medium", innovation: "Code generation", description: "T5-based model for code understanding and generation", domain: "Code", source: "CodeT5: Identifier-aware Unified Pre-trained Encoder-Decoder Models for Code Understanding and Generation" },
+            { name: "Codex", year: 2021, category: "specialized", complexity: "high", innovation: "Code generation", description: "GPT-based model fine-tuned for code generation", domain: "Code", source: "Evaluating Large Language Models Trained on Code" },
+            { name: "GitHub Copilot", year: 2021, category: "specialized", complexity: "high", innovation: "AI pair programming", description: "Code completion and generation assistant", domain: "Code", source: "GitHub Copilot" },
+            { name: "AlphaCode", year: 2022, category: "specialized", complexity: "high", innovation: "Competitive programming", description: "Transformer for solving competitive programming problems", domain: "Code", source: "Competition-level code generation with AlphaCode" },
+            { name: "CodeGen", year: 2022, category: "specialized", complexity: "medium", innovation: "Multi-language code", description: "Multi-lingual code generation model", domain: "Code", source: "CodeGen: An Open Large Language Model for Code with Multi-Turn Program Synthesis" },
+            { name: "InCoder", year: 2022, category: "specialized", complexity: "medium", innovation: "Infilling", description: "Code infilling and completion model", domain: "Code", source: "InCoder: A Generative Model for Code Infilling and Synthesis" },
+            
+            // Reinforcement Learning
+            { name: "Decision Transformer", year: 2021, category: "specialized", complexity: "medium", innovation: "RL as sequence modeling", description: "Treats reinforcement learning as sequence modeling problem", domain: "RL", source: "Decision Transformer: Reinforcement Learning via Sequence Modeling" },
+            { name: "Trajectory Transformer", year: 2021, category: "specialized", complexity: "medium", innovation: "Trajectory modeling", description: "Models trajectories in reinforcement learning", domain: "RL", source: "Offline Reinforcement Learning as One Big Sequence Modeling Problem" },
+            { name: "Gato", year: 2022, category: "specialized", complexity: "high", innovation: "Generalist agent", description: "Multi-modal, multi-task, multi-embodiment generalist agent", domain: "RL/Multi-task", source: "A Generalist Agent" },
+            
+            // Robotic Transformers
+            { name: "RT-1", year: 2022, category: "specialized", complexity: "high", innovation: "Robotics transformer", description: "Robotics Transformer for real-world robotic control", domain: "Robotics", source: "RT-1: Robotics Transformer for Real-World Control at Scale" },
+            { name: "RT-2", year: 2023, category: "specialized", complexity: "high", innovation: "Vision-language-action", description: "Vision-Language-Action model for robotics", domain: "Robotics", source: "RT-2: Vision-Language-Action Models Transfer Web Knowledge to Robotic Control" },
+            { name: "PaLM-E", year: 2023, category: "multimodal", complexity: "high", innovation: "Embodied multimodal", description: "Embodied multimodal language model for robotics", domain: "Robotics", source: "PaLM-E: An Embodied Multimodal Language Model" },
+            
+            // Memory and Retrieval
+            { name: "RETRO", year: 2021, category: "specialized", complexity: "high", innovation: "Retrieval augmentation", description: "Retrieval-Enhanced Transformer with external memory", domain: "General", source: "Improving language models by retrieving from trillions of tokens" },
+            { name: "FiD", year: 2020, category: "specialized", complexity: "medium", innovation: "Fusion-in-Decoder", description: "Retrieval-augmented generation with fusion in decoder", domain: "NLP", source: "Leveraging Passage Retrieval with Generative Models for Open Domain Question Answering" },
+            { name: "RAG", year: 2020, category: "specialized", complexity: "medium", innovation: "Retrieval augmented generation", description: "Combines retrieval with generation for knowledge-intensive tasks", domain: "NLP", source: "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks" },
+            { name: "Memorizing Transformers", year: 2022, category: "specialized", complexity: "medium", innovation: "External memory", description: "Transformers with external memory for long-term dependencies", domain: "General", source: "Memorizing Transformers" },
+            
+            // Optimization and Training
+            { name: "T5", year: 2019, category: "foundational", complexity: "medium", innovation: "Text-to-text transfer", description: "Treats all NLP tasks as text-to-text problems", domain: "NLP", source: "Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer" },
+            { name: "UL2", year: 2022, category: "foundational", complexity: "medium", innovation: "Unified language learner", description: "Unified framework for different pre-training objectives", domain: "NLP", source: "UL2: Unifying Language Learning Paradigms" },
+            { name: "PaLM 2", year: 2023, category: "foundational", complexity: "high", innovation: "Improved training", description: "Improved version of PaLM with better training techniques", domain: "General", source: "PaLM 2 Technical Report" },
+            { name: "Chinchilla", year: 2022, category: "foundational", complexity: "high", innovation: "Compute-optimal scaling", description: "Demonstrates optimal compute allocation for training", domain: "General", source: "Training Compute-Optimal Large Language Models" },
+            { name: "Gopher", year: 2021, category: "foundational", complexity: "high", innovation: "280B parameter model", description: "Large-scale language model with extensive evaluation", domain: "General", source: "Scaling Language Models: Methods, Analysis & Insights from Training Gopher" },
+            
+            // Architectural Variants
+            { name: "GLU Variants", year: 2020, category: "specialized", complexity: "low", innovation: "Gated linear units", description: "Various gated linear unit variants (SwiGLU, GeGLU, etc.)", domain: "General", source: "GLU Variants Improve Transformer" },
+            { name: "RoPE", year: 2021, category: "specialized", complexity: "low", innovation: "Rotary position embedding", description: "Rotary Position Embedding for better position encoding", domain: "General", source: "RoFormer: Enhanced Transformer with Rotary Position Embedding" },
+            { name: "ALiBi", year: 2021, category: "specialized", complexity: "low", innovation: "Attention with linear biases", description: "Attention with Linear Biases for better extrapolation", domain: "General", source: "Train Short, Test Long: Attention with Linear Biases Enables Input Length Extrapolation" },
+            { name: "RMSNorm", year: 2019, category: "specialized", complexity: "low", innovation: "Root mean square normalization", description: "Simplified layer normalization variant", domain: "General", source: "Root Mean Square Layer Normalization" },
+            { name: "Pre-LN Transformer", year: 2020, category: "specialized", complexity: "low", innovation: "Pre-normalization", description: "Layer normalization before attention/FFN instead of after", domain: "General", source: "On Layer Normalization in the Transformer Architecture" },
+            
+            // Emerging Architectures 2024
+            { name: "Hyena", year: 2023, category: "recent", complexity: "medium", innovation: "Subquadratic operators", description: "Subquadratic alternative using convolutions and gating", domain: "General", source: "Hyena Hierarchy: Towards Larger Convolutional Language Models" },
+            { name: "Based", year: 2024, category: "recent", complexity: "medium", innovation: "Linear attention", description: "Linear attention variant with improved training dynamics", domain: "General", source: "Simple linear attention language models balance the recall-throughput tradeoff" },
+            { name: "Mega", year: 2022, category: "recent", complexity: "medium", innovation: "Moving average gating", description: "Moving Average Equipped Gated Attention", domain: "General", source: "Mega: Moving Average Equipped Gated Attention" },
+            { name: "H3", year: 2022, category: "recent", complexity: "medium", innovation: "State space models", description: "Hungry Hungry Hippos - state-space model with subquadratic scaling", domain: "General", source: "Hungry Hungry Hippos: Towards Language Modeling with State Space Models" },
+            { name: "S4", year: 2021, category: "recent", complexity: "medium", innovation: "Structured state spaces", description: "Efficiently Modeling Long Sequences with Structured State Spaces", domain: "General", source: "Efficiently Modeling Long Sequences with Structured State Spaces" },
+            { name: "S4D", year: 2022, category: "recent", complexity: "medium", innovation: "Diagonal state spaces", description: "Simplified S4 with diagonal structure", domain: "General", source: "On the Parameterization and Initialization of Diagonal State Space Models" },
+            
+            // Domain-specific recent additions
+            { name: "ProteinBERT", year: 2022, category: "scientific", complexity: "medium", innovation: "Protein representation", description: "BERT-like model specifically for protein sequences", domain: "Biology", source: "ProteinBERT: a universal deep-learning model of protein sequence and function" },
+            { name: "DNA-BERT", year: 2021, category: "scientific", complexity: "medium", innovation: "DNA sequence modeling", description: "BERT for DNA sequence analysis", domain: "Biology", source: "DNABERT: pre-trained Bidirectional Encoder Representations from Transformers model for DNA-language in genome" },
+            { name: "GenSLM", year: 2022, category: "scientific", complexity: "high", innovation: "Genomic foundation model", description: "Large-scale genomic foundation model", domain: "Biology", source: "GenSLMs: Genome-scale language models reveal SARS-CoV-2 evolutionary dynamics" },
+            { name: "BioGPT", year: 2022, category: "scientific", complexity: "medium", innovation: "Biomedical text generation", description: "GPT for biomedical text generation and understanding", domain: "Biomedical", source: "BioGPT: generative pre-trained transformer for biomedical text generation and mining" },
+            
+            // Video and 3D
+            { name: "Video Transformer", year: 2021, category: "vision", complexity: "high", innovation: "Video understanding", description: "Transformer for video classification and understanding", domain: "Video", source: "Is Space-Time Attention All You Need for Video Understanding?" },
+            { name: "TimeSformer", year: 2021, category: "vision", complexity: "high", innovation: "Divided space-time attention", description: "Applies transformers to video with divided attention", domain: "Video", source: "Is Space-Time Attention All You Need for Video Understanding?" },
+            { name: "ViViT", year: 2021, category: "vision", complexity: "high", innovation: "Video vision transformer", description: "Video Vision Transformer for video classification", domain: "Video", source: "ViViT: A Video Vision Transformer" },
+            { name: "Point Transformer", year: 2021, category: "vision", complexity: "medium", innovation: "3D point clouds", description: "Transformer for 3D point cloud processing", domain: "3D Vision", source: "Point Transformer" },
+            { name: "PCT", year: 2021, category: "vision", complexity: "medium", innovation: "Point cloud transformer", description: "Point Cloud Transformer for 3D object classification", domain: "3D Vision", source: "PCT: Point cloud transformer" },
+            
+            // Multimodal Recent
+            { name: "LLaVA", year: 2023, category: "multimodal", complexity: "medium", innovation: "Visual instruction tuning", description: "Large Language and Vision Assistant", domain: "Vision-Language", source: "Visual Instruction Tuning" },
+            { name: "GPT-4V", year: 2023, category: "multimodal", complexity: "high", innovation: "Vision capabilities", description: "GPT-4 with vision capabilities", domain: "Vision-Language", source: "GPT-4V(ision) System Card" },
+            { name: "Flamingo-80B", year: 2022, category: "multimodal", complexity: "high", innovation: "Large-scale multimodal", description: "80B parameter multimodal model", domain: "Vision-Language", source: "Flamingo: a Visual Language Model for Few-Shot Learning" },
+            { name: "KOSMOS-1", year: 2023, category: "multimodal", complexity: "high", innovation: "Multimodal LLM", description: "Multimodal Large Language Model", domain: "Multimodal", source: "Language Is Not All You Need: Aligning Perception with Language Models" },
+            
+            // Medical and Healthcare
+            { name: "ClinicalBERT", year: 2019, category: "scientific", complexity: "medium", innovation: "Clinical text", description: "BERT for clinical text understanding", domain: "Healthcare", source: "ClinicalBERT: Modeling Clinical Notes and Predicting Hospital Readmission" },
+            { name: "BioBERT", year: 2019, category: "scientific", complexity: "medium", innovation: "Biomedical text", description: "BERT for biomedical text mining", domain: "Biomedical", source: "BioBERT: a pre-trained biomedical language representation model" },
+            { name: "PubMedBERT", year: 2020, category: "scientific", complexity: "medium", innovation: "PubMed abstracts", description: "BERT trained on PubMed abstracts", domain: "Biomedical", source: "Domain-Specific Language Model Pretraining for Biomedical Natural Language Processing" },
+            { name: "Med-PaLM", year: 2022, category: "scientific", complexity: "high", innovation: "Medical question answering", description: "PaLM fine-tuned for medical question answering", domain: "Healthcare", source: "Large Language Models Encode Clinical Knowledge" },
+            { name: "Med-PaLM 2", year: 2023, category: "scientific", complexity: "high", innovation: "Improved medical AI", description: "Enhanced medical question answering model", domain: "Healthcare", source: "Towards Expert-Level Medical Question Answering with Large Language Models" },
+            
+            // Finance and Legal
+            { name: "FinBERT", year: 2019, category: "specialized", complexity: "medium", innovation: "Financial text", description: "BERT for financial text analysis", domain: "Finance", source: "FinBERT: Financial Sentiment Analysis with Pre-trained Language Models" },
+            { name: "LegalBERT", year: 2020, category: "specialized", complexity: "medium", innovation: "Legal text", description: "BERT for legal document analysis", domain: "Legal", source: "LegalBERT: The Muppets straight out of Law School" },
+            { name: "BloombergGPT", year: 2023, category: "specialized", complexity: "high", innovation: "Financial LLM", description: "Large language model for finance", domain: "Finance", source: "BloombergGPT: A Large Language Model for Finance" },
+            
+            // Education and Math
+            { name: "MathBERT", year: 2021, category: "specialized", complexity: "medium", innovation: "Mathematical text", description: "BERT for mathematical text understanding", domain: "Math", source: "MathBERT: A Pre-Trained Model for Mathematical Formula Understanding" },
+            { name: "Minerva", year: 2022, category: "specialized", complexity: "high", innovation: "Mathematical reasoning", description: "Large language model for mathematical reasoning", domain: "Math", source: "Solving Quantitative Reasoning Problems with Language Models" },
+            { name: "WizardMath", year: 2023, category: "specialized", complexity: "medium", innovation: "Math problem solving", description: "Enhanced mathematical problem-solving capabilities", domain: "Math", source: "WizardMath: Empowering Mathematical Reasoning for Large Language Models" },
+            
+            // Language-specific
+            { name: "CamemBERT", year: 2019, category: "foundational", complexity: "medium", innovation: "French BERT", description: "BERT for French language", domain: "French NLP", source: "CamemBERT: a Tasty French Language Model" },
+            { name: "FlauBERT", year: 2019, category: "foundational", complexity: "medium", innovation: "French language model", description: "Another French BERT variant", domain: "French NLP", source: "FlauBERT: Unsupervised Language Model Pre-training for French" },
+            { name: "ERNIE", year: 2019, category: "foundational", complexity: "medium", innovation: "Knowledge integration", description: "Enhanced Representation through kNowledge IntEgration", domain: "Chinese NLP", source: "ERNIE: Enhanced Representation through Knowledge Integration" },
+            { name: "BERT-wwm", year: 2019, category: "foundational", complexity: "medium", innovation: "Whole word masking", description: "BERT with whole word masking for Chinese", domain: "Chinese NLP", source: "Pre-Training with Whole Word Masking for Chinese BERT" },
+            
+            // Very Recent 2024 Models
+            { name: "Gemini", year: 2023, category: "foundational", complexity: "high", innovation: "Multimodal foundation", description: "Google's multimodal foundation model", domain: "Multimodal", source: "Gemini: A Family of Highly Capable Multimodal Models" },
+            { name: "Gemini Pro", year: 2024, category: "foundational", complexity: "high", innovation: "Enhanced capabilities", description: "Enhanced version of Gemini", domain: "Multimodal", source: "Gemini: A Family of Highly Capable Multimodal Models" },
+            { name: "Claude 3", year: 2024, category: "foundational", complexity: "high", innovation: "Constitutional AI v2", description: "Advanced constitutional AI with multiple model sizes", domain: "General", source: "Claude 3 Model Card" },
+            { name: "Command R", year: 2024, category: "recent", complexity: "high", innovation: "RAG optimization", description: "Cohere's model optimized for retrieval-augmented generation", domain: "General", source: "Command R: Retrieval Augmented Generation at Production Scale" }
+        ];
+
+        let filteredData = [...transformerData];
+        let sortColumn = -1;
+        let sortDirection = 1;
+
+        function initializeTable() {
+            populateFilters();
+            updateStats();
+            renderTable();
+            setupEventListeners();
+        }
+
+        function populateFilters() {
+            const categories = [...new Set(transformerData.map(item => item.category))].sort();
+            const years = [...new Set(transformerData.map(item => item.year))].sort((a, b) => b - a);
+            
+            const categoryFilter = document.getElementById('categoryFilter');
+            const yearFilter = document.getElementById('yearFilter');
+            
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+                categoryFilter.appendChild(option);
+            });
+            
+            years.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearFilter.appendChild(option);
+            });
+        }
+
+        function updateStats() {
+            document.getElementById('totalCount').textContent = filteredData.length;
+            document.getElementById('categoryCount').textContent = new Set(filteredData.map(item => item.category)).size;
+            document.getElementById('recentCount').textContent = filteredData.filter(item => item.year === 2024).length;
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            
+            filteredData.forEach(item => {
+                const row = document.createElement('tr');
+                
+                const complexityBar = createComplexityBar(item.complexity);
+                const categoryTag = `<span class="category-tag ${item.category}">${item.category}</span>`;
+                const yearBadge = `<span class="year-badge">${item.year}</span>`;
+                
+                row.innerHTML = `
+                    <td><strong>${item.name}</strong></td>
+                    <td>${yearBadge}</td>
+                    <td>${categoryTag}</td>
+                    <td>${complexityBar}</td>
+                    <td>${item.innovation}</td>
+                    <td class="description">${item.description}</td>
+                    <td>${item.domain}</td>
+                    <td>${item.source}</td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        function createComplexityBar(complexity) {
+            const width = complexity === 'low' ? '33%' : complexity === 'medium' ? '66%' : '100%';
+            const className = complexity;
+            return `
+                <div class="complexity-indicator">
+                    <div class="complexity-bar ${className}" style="width: ${width}"></div>
+                </div>
+                <small>${complexity}</small>
+            `;
+        }
+
+        function setupEventListeners() {
+            const searchBox = document.getElementById('searchBox');
+            const categoryFilter = document.getElementById('categoryFilter');
+            const yearFilter = document.getElementById('yearFilter');
+            
+            searchBox.addEventListener('input', filterData);
+            categoryFilter.addEventListener('change', filterData);
+            yearFilter.addEventListener('change', filterData);
+        }
+
+        function filterData() {
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const yearFilter = document.getElementById('yearFilter').value;
+            
+            filteredData = transformerData.filter(item => {
+                const matchesSearch = !searchTerm || 
+                    item.name.toLowerCase().includes(searchTerm) ||
+                    item.description.toLowerCase().includes(searchTerm) ||
+                    item.innovation.toLowerCase().includes(searchTerm) ||
+                    item.domain.toLowerCase().includes(searchTerm);
+                
+                const matchesCategory = !categoryFilter || item.category === categoryFilter;
+                const matchesYear = !yearFilter || item.year.toString() === yearFilter;
+                
+                return matchesSearch && matchesCategory && matchesYear;
+            });
+            
+            updateStats();
+            renderTable();
+            
+            // Highlight search terms
+            if (searchTerm) {
+                highlightSearchTerms(searchTerm);
+            }
+        }
+
+        function highlightSearchTerms(term) {
+            const rows = document.querySelectorAll('#tableBody tr');
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                cells.forEach(cell => {
+                    if (cell.textContent.toLowerCase().includes(term)) {
+                        cell.classList.add('highlight');
+                        setTimeout(() => cell.classList.remove('highlight'), 3000);
+                    }
+                });
+            });
+        }
+
+        function sortTable(columnIndex) {
+            if (sortColumn === columnIndex) {
+                sortDirection *= -1;
+            } else {
+                sortColumn = columnIndex;
+                sortDirection = 1;
+            }
+            
+            const columnMap = ['name', 'year', 'category', 'complexity', 'innovation', 'description', 'domain', 'source'];
+            const column = columnMap[columnIndex];
+            
+            filteredData.sort((a, b) => {
+                let aVal = a[column];
+                let bVal = b[column];
+                
+                if (column === 'year') {
+                    return (aVal - bVal) * sortDirection;
+                }
+                
+                if (column === 'complexity') {
+                    const complexityOrder = { 'low': 1, 'medium': 2, 'high': 3 };
+                    return (complexityOrder[aVal] - complexityOrder[bVal]) * sortDirection;
+                }
+                
+                return aVal.localeCompare(bVal) * sortDirection;
+            });
+            
+            renderTable();
+        }
+
+        function exportToCSV() {
+            const headers = ['Name', 'Year', 'Category', 'Complexity', 'Key Innovation', 'Description', 'Domain', 'Paper/Source'];
+            const csvContent = [
+                headers.join(','),
+                ...filteredData.map(item => [
+                    `"${item.name}"`,
+                    item.year,
+                    `"${item.category}"`,
+                    `"${item.complexity}"`,
+                    `"${item.innovation}"`,
+                    `"${item.description}"`,
+                    `"${item.domain}"`,
+                    `"${item.source}"`
+                ].join(','))
+            ].join('\n');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'transformers_database.csv';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Initialize the table when the page loads
+        initializeTable();
+    </script>
+</body>
+</html>
