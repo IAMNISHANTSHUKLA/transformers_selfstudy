@@ -25,6 +25,7 @@
             border-radius: 20px;
             padding: 30px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
         }
         
@@ -310,10 +311,12 @@
         
         <div class="controls">
             <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search transformers..." />
-            <select class="filter-select" id="categoryFilter">
+            <label for="categoryFilter" style="display:none;">Category Filter</label>
+            <select class="filter-select" id="categoryFilter" aria-label="Category Filter" title="Category Filter">
                 <option value="">All Categories</option>
             </select>
-            <select class="filter-select" id="yearFilter">
+            <label for="yearFilter" style="display:none;">Year Filter</label>
+            <select class="filter-select" id="yearFilter" aria-label="Year Filter" title="Year Filter">
                 <option value="">All Years</option>
             </select>
             <button class="export-btn" onclick="exportToCSV()">📊 Export CSV</button>
